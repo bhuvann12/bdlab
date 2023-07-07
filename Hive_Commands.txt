@@ -1,0 +1,158 @@
+cd $HADOOP_HOME/sbin && ./start-all.sh
+
+
+
+
+jps
+6nodes
+
+
+
+hive
+
+
+
+Hive Session ID = eb425bfb-fb43-499d-81da-25a49b2cc598
+//hadoop dfsadmin -safemode leave
+
+
+
+show databases;
+
+
+
+create database sales;
+
+
+
+use sales;
+
+create table s1(product string,price int, pt string,name string,city string, state string, country string);
+
+create table s2(product string,price int, pt string,name string,city string, state string, country string);
+
+desc s2
+
+
+
+
+
+
+
+select * from s2;
+
+
+1st query 
+
+
+
+INSERT INTO sales VALUES
+  ('2022-01-01', 'Product1', 100.0, 'Visa', 'John Doe', 'Seattle', 'WA', 'USA', '2022-01-01', '2022-01-01', 47.6097, -122.3331),
+  ('2022-01-02', 'Product2', 200.0, 'Mastercard', 'Jane Smith', 'New York', 'NY', 'USA', '2022-01-02', '2022-01-02', 40.7128, -74.0060),
+  ('2022-01-03', 'Product3', 150.0, 'Visa', 'Mike Johnson', 'Los Angeles', 'CA', 'USA', '2022-01-03', '2022-01-03', 34.0522, -118.2437),
+  ('2022-01-04', 'Product4', 300.0, 'Visa', 'Emily Davis', 'Chicago', 'IL', 'USA', '2022-01-04', '2022-01-04', 41.8781, -87.6298),
+  ('2022-01-05', 'Product5', 250.0, 'Mastercard', 'Alex Wilson', 'Houston', 'TX', 'USA', '2022-01-05', '2022-01-05', 29.7604, -95.3698);
+  ('2022-01-01', 'Product1', 100.0, 'Visa', 'John Doe', 'Seattle', 'WA', 'USA', '2022-01-01', '2022-01-01', 47.6097, -122.3331),
+
+2nd query 
+
+LOAD DATA local INPATH '/home/hdoop/Downloads/s.csv' into table s2;
+
+3erd query 
+
+
+select count(product),country from s2 group by country;
+
+4th 
+
+select count(product),state from s2 group by state;
+
+
+5th 
+
+
+select name,product from s2 group by product;
+
+select collect_list(name),product from s2 group by product;
+
+
+6th 
+
+
+select * from s2 limit 5;
+
+
+
+select name,product from s2 group by name,product;
+
+select collect_list(name),product from s2 group by product;
+
+
+
+6th 
+
+hive> create view mastercardview as
+    > select * from s2
+    > where pt="mastercard";
+
+select * from mastercardview;
+
+
+
+hive> create view visa as
+    > select * from s2
+    > where pt="Visa";
+
+
+
+
+
+select * from visa;
+
+
+
+CREATE VIEW visa_sales AS SELECT * FROM sales WHERE Payment_Type = 'Visa';
+CREATE VIEW mastercard_sales AS SELECT * FROM sales WHERE Payment_Type = 'Mastercard';
+
+
+
+
+7th
+
+
+select * from s2 where city ="Seattle";
+
+
+
+
+
+
+desc s2;
+
+8th 
+
+hive> SELECT COUNT(name) AS max_name
+    > from s
+    > where state="Ontario"
+    > group by state
+    > order by max_name desc
+    > limit 1;
+
+
+9th 
+
+select count(product) from s where price between 1500 and 3600;
+
+
+
+
+select count(product) from s where price>1500 and price<3600;
+
+
+10th 
+
+
+hive> select * from s
+    > where country="United States" and pt="Mastercard"
+    > limit 5;
+
